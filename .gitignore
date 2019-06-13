@@ -1,0 +1,3 @@
+tools
+./testdata/tools/bin/*
+!./testdata/tools/bin/.gitkeep
