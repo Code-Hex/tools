@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"golang.org/x/sync/errgroup"
@@ -24,7 +25,11 @@ func run(args []string) error {
 	if len(args) == 0 {
 		return errors.New("unexpected arguments more than 0")
 	}
-	filename := args[0]
+	filename := filepath.Base(args[0])
+	toolsDir := filepath.Dir(args[0])
+	if err := os.Chdir(toolsDir); err != nil {
+		return err
+	}
 	src, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return err
@@ -48,8 +53,5 @@ func run(args []string) error {
 		})
 	}
 
-	// if err := format.Node(os.Stdout, fset, f); err != nil {
-	// 	return err
-	// }
 	return eg.Wait()
 }
